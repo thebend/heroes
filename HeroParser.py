@@ -67,7 +67,7 @@ class HeroParser():
 		"""
 		Returns dict of 3 complicated dicts
 		m_syncLobbyState
-			m_userInitialData
+			m_userInitialData = list
 				m_testAuto = False
 				m_mount = ''
 				m_observe = 0
