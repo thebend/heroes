@@ -1,6 +1,8 @@
 # Blizzard's heroprotocol files
 heroprotocol/
 
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
