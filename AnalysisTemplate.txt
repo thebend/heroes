@@ -1,0 +1,32 @@
+Replay Path: {}
+Version: {}
+Duration in Loops: {}
+Map: {}
+Time: {}
+Mini-Save: {}
+Max Users: {}
+Single Player: {}
+Blizzard Map: {}
+Competitive: {}
+Practice: {}
+Ranked: {}
+Lock Teams: {}
+m_amm: {}
+
+Team 1 ({}):
+{}
+
+Team 2 ({}):
+{}
+
+Chats:
+{}
+
+Pings:
+{}
+
+Deaths:
+{}
+
+Event Counts:
+{}
