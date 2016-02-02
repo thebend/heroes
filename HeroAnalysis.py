@@ -4,21 +4,72 @@ from HeroBasicTypes import *
 from collections import defaultdict
 
 from events.SCmdEvent import SCmdEvent
-from events.SCommandManagerTargetPointEvent import SCommandManagerTargetPointEvent
 from events.SHeroTalentSelectedEvent import SHeroTalentSelectedEvent
 from events.SUnitDiedEvent import SUnitDiedEvent
 from events.STriggerPingEvent import STriggerPingEvent
 
+event_processors = {}
+def get_event_processor(id):
+    try: return event_processors[id]
+    except KeyError: return default_processor
+
+def EventProcessor(id):
+    def set_processor(processor):
+        event_processors[id] = processor
+        return processor
+    return set_processor
+
+# Return a function that does nothing when no hit found
+def default_processor(player, event):
+    pass
+
+@EventProcessor(27)
+def SCmdEvent_processor(player, event):
+    player.SCmdEvents.append(
+        SCmdEvent(event)
+    )
+
+@EventProcessor(110)
+def SHeryoTalentSelectedEvent_processor(player, event):
+    player.SHeroTalentSelectedEvents.append(
+        SHeroTalentSelectedEvent(event)
+    )
+
+@EventProcessor(104)
+def SCommandManagerTargetPointEvent_processor(player, event):
+    player.SCommandManagerTargetPointEvents.append(
+        TimePlace.from_json(event, 'm_target'))
+
+@EventProcessor(49)
+def SCameraUpdateEvent_processor(player, event):
+    player.SCameraUpdateEvents.append(
+        TimePlace.from_json(event, 'm_target'))
+
+@EventProcessor(36)
+def STriggerPingEvent_processor(player, event):
+    player.STriggerPingEvents.append(
+        STriggerPingEvent(event))
+
+@EventProcessor(32)
+def STriggerChatMessageEvent_processor(player, event):
+    c = Chat()
+    c.loop = event['_gameloop']
+    c.message = event['m_chatMessage']
+    player.chats.append(c)
+
+@EventProcessor(39)
+def SUnitClickEvent_processor(player, event):
+    print event
+
 SUnitDiedEvent_id = 2
-SCmdEvent_id = 27
-STriggerChatMessageEvent_id = 32
-STriggerPingEvent_id = 36
-SUnitClickEvent_id = 39
-SCameraUpdateEvent_id = 49
-SCommandManagerStateEvent_id = 103
-SCommandManagerTargetPointEvent_id = 104
-SCommandManagerTargetUnitEvent_id = 105
-SHeroTalentSelectedEvent_id = 110
+
+@EventProcessor(103)
+def SCommandManagerStateEvent_processor(player, event):
+    pass
+
+@EventProcessor(105)
+def SCommandManagerTargetUnitEvent_processor(player, event):
+    pass
 
 # These do vary slightly between protocol versions
 # eg. 110 is SHeroTalentTreeSelectedEvent
@@ -288,46 +339,21 @@ tracker_event_types = {
 
         game_events = parser.get_game_events()
         self.event_counts = defaultdict(int)
-        for ge in game_events:
-            eid = ge['_eventid']
-            uid = ge['_userid']['m_userId']
+        for event in game_events:
+            event_id = event['_eventid']
+            uid = event['_userid']['m_userId']
             
             # only a few that are beyond regular uids
             if uid > len(self.player_slots):
                 continue
-                print ge
-                print dir(ge)
+                print event
+                print dir(event)
 
-            p = self.player_slots[uid]
-            if eid == SCmdEvent_id:
-                p.SCmdEvents.append(
-                    SCmdEvent(ge))
-            elif eid == SHeroTalentSelectedEvent_id:
-                p.SHeroTalentSelectedEvents.append(
-                    SHeroTalentSelectedEvent(ge))
-            elif eid == SCommandManagerTargetPointEvent_id:
-                p.SCommandManagerTargetPointEvents.append(
-                    TimePlace.from_json(ge, 'm_target'))
-            elif eid == SCameraUpdateEvent_id:
-                p.SCameraUpdateEvents.append(
-                    TimePlace.from_json(ge, 'm_target'))
-            elif eid == STriggerPingEvent_id:
-                p.STriggerPingEvents.append(
-                    STriggerPingEvent(ge))
-            elif eid == STriggerChatMessageEvent_id:
-                c = Chat()
-                c.loop = ge['_gameloop']
-                c.message = ge['m_chatMessage']
-                p.chats.append(c)
-            elif eid == SUnitClickEvent_id:
-                pass
-            elif eid == SCommandManagerStateEvent_id:
-                pass
-            elif eid == SCommandManagerTargetUnitEvent_id:
-                pass
+            player = self.player_slots[uid]
+            get_event_processor(event_id)(player, event)
 
             # count to know which to parse later
-            self.event_counts[eid] += 1
+            self.event_counts[event_id] += 1
 
     def __repr__(self):
         team1 = [p for p in self.players.itervalues() if p.team == 0]
