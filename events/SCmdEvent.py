@@ -32,11 +32,10 @@ class SCmdEvent:
         # always a single-item dict
         k, v = event['m_data'].items()[0]
         if k == 'TargetPoint':
-            self.target_point = Point(v['x'], v['y'], v['z'])
-
+            self.target_point = Point(v)
         elif k == 'TargetUnit':
             p = v['m_snapshotPoint']
-            self.target_point = Point(p['x'], p['y'], p['z'])
+            self.target_point = Point(p)
 
             # same as m_snapshotUpkeepPlayerId
             self.player_id = v['m_snapshotControlPlayerId']

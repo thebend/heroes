@@ -3,11 +3,7 @@ class TimePlace:
     def from_json(json, point_key):
         loop = json['_gameloop']
         t = json[point_key]
-        if t == None:
-            return TimePlace(loop, None)
-        try: z = t['z']
-        except KeyError: z = None
-        point = Point(t['x'], t['y'], z)
+        point = None if t == None else Point(t)
         return TimePlace(loop, point)
 
     def __init__(self, loop, location):
@@ -21,10 +17,17 @@ class TimePlace:
         )
 
 class Point:
-    def __init__(self, x, y, z = None):
-        self.x = x
-        self.y = y
-        self.z = z
+    def __init__(self, x, y = None, z = None):
+        # x can actually be dictionary of whole point
+        if type(x) == dict:
+            self.x = x['x']
+            self.y = x['y']
+            try: self.z = x['z']
+            except KeyError: self.z = None
+        else:
+            self.x = x
+            self.y = y
+            self.z = z
 
     def __repr__(self):
         if self.z == None:

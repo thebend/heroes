@@ -3,11 +3,19 @@ from Player import Player
 from HeroBasicTypes import *
 from collections import defaultdict
 
+from game_event_ids import game_event_ids
+
 from events.SCmdEvent import SCmdEvent
 from events.SHeroTalentSelectedEvent import SHeroTalentSelectedEvent
 from events.SUnitDiedEvent import SUnitDiedEvent
 from events.STriggerPingEvent import STriggerPingEvent
+from events.SUnitDiedEvent import SUnitDiedEvent
+from events.SUnitClickEvent import SUnitClickEvent
+from events.SCommandManagerTargetUnitEvent import SCommandManagerTargetUnitEvent
+from events.SCommandManagerStateEvent import SCommandManagerStateEvent
 
+# Move these into module __init__ or something?
+# Where to keep this?
 event_processors = {}
 def get_event_processor(id):
     try: return event_processors[id]
@@ -59,116 +67,20 @@ def STriggerChatMessageEvent_processor(player, event):
 
 @EventProcessor(39)
 def SUnitClickEvent_processor(player, event):
-    print event
-
-SUnitDiedEvent_id = 2
-
-@EventProcessor(103)
-def SCommandManagerStateEvent_processor(player, event):
-    pass
+    player.SUnitClickEvents.append(
+        SUnitClickEvent(event))
 
 @EventProcessor(105)
 def SCommandManagerTargetUnitEvent_processor(player, event):
-    pass
+    player.SCommandManagerTargetUnitEvents.append(
+        SCommandManagerTargetUnitEvent(event))
 
-# These do vary slightly between protocol versions
-# eg. 110 is SHeroTalentTreeSelectedEvent
-# and 110 is HeroTalentSelectedEvent
-game_event_ids = {
-    5: 'SUserFinishedLoadingSyncEvent',
-    7: 'SUserOptionsEvent',
-    9: 'SBankFileEvent',
-    10: 'SBankSectionEvent',
-    11: 'SBankKeyEvent',
-    12: 'SBankValueEvent',
-    13: 'SBankSignatureEvent',
-    14: 'SCameraSaveEvent',
-    21: 'SSaveGameEvent',
-    22: 'SSaveGameDoneEvent',
-    23: 'SLoadGameDoneEvent',
-    25: 'SCommandManagerResetEvent',
-    26: 'SGameCheatEvent',
-    27: 'SCmdEvent',
-    28: 'SSelectionDeltaEvent',
-    29: 'SControlGroupUpdateEvent',
-    30: 'SSelectionSyncCheckEvent',
-    31: 'SResourceTradeEvent',
-    32: 'STriggerChatMessageEvent',
-    33: 'SAICommunicateEvent',
-    34: 'SSetAbsoluteGameSpeedEvent',
-    35: 'SAddAbsoluteGameSpeedEvent',
-    36: 'STriggerPingEvent',
-    37: 'SBroadcastCheatEvent',
-    38: 'SAllianceEvent',
-    39: 'SUnitClickEvent',
-    40: 'SUnitHighlightEvent',
-    41: 'STriggerReplySelectedEvent',
-    43: 'SHijackReplayGameEvent',
-    44: 'STriggerSkippedEvent',
-    45: 'STriggerSoundLengthQueryEvent',
-    46: 'STriggerSoundOffsetEvent',
-    47: 'STriggerTransmissionOffsetEvent',
-    48: 'STriggerTransmissionCompleteEvent',
-    49: 'SCameraUpdateEvent',
-    50: 'STriggerAbortMissionEvent',
-    51: 'STriggerPurchaseMadeEvent',
-    52: 'STriggerPurchaseExitEvent',
-    53: 'STriggerPlanetMissionLaunchedEvent',
-    54: 'STriggerPlanetPanelCanceledEvent',
-    55: 'STriggerDialogControlEvent',
-    56: 'STriggerSoundLengthSyncEvent',
-    57: 'STriggerConversationSkippedEvent',
-    58: 'STriggerMouseClickedEvent',
-    59: 'STriggerMouseMovedEvent',
-    60: 'SAchievementAwardedEvent',
-    62: 'STriggerTargetModeUpdateEvent',
-    63: 'STriggerPlanetPanelReplayEvent',
-    64: 'STriggerSoundtrackDoneEvent',
-    65: 'STriggerPlanetMissionSelectedEvent',
-    66: 'STriggerKeyPressedEvent',
-    67: 'STriggerMovieFunctionEvent',
-    68: 'STriggerPlanetPanelBirthCompleteEvent',
-    69: 'STriggerPlanetPanelDeathCompleteEvent',
-    70: 'SResourceRequestEvent',
-    71: 'SResourceRequestFulfillEvent',
-    72: 'SResourceRequestCancelEvent',
-    73: 'STriggerResearchPanelExitEvent',
-    74: 'STriggerResearchPanelPurchaseEvent',
-    75: 'STriggerResearchPanelSelectionChangedEvent',
-    77: 'STriggerMercenaryPanelExitEvent',
-    78: 'STriggerMercenaryPanelPurchaseEvent',
-    79: 'STriggerMercenaryPanelSelectionChangedEvent',
-    80: 'STriggerVictoryPanelExitEvent',
-    81: 'STriggerBattleReportPanelExitEvent',
-    82: 'STriggerBattleReportPanelPlayMissionEvent',
-    83: 'STriggerBattleReportPanelPlaySceneEvent',
-    84: 'STriggerBattleReportPanelSelectionChangedEvent',
-    85: 'STriggerVictoryPanelPlayMissionAgainEvent',
-    86: 'STriggerMovieStartedEvent',
-    87: 'STriggerMovieFinishedEvent',
-    88: 'SDecrementGameTimeRemainingEvent',
-    89: 'STriggerPortraitLoadedEvent',
-    90: 'STriggerCustomDialogDismissedEvent',
-    91: 'STriggerGameMenuItemSelectedEvent',
-    93: 'STriggerPurchasePanelSelectedPurchaseItemChangedEvent',
-    94: 'STriggerPurchasePanelSelectedPurchaseCategoryChangedEvent',
-    95: 'STriggerButtonPressedEvent',
-    96: 'STriggerGameCreditsFinishedEvent',
-    97: 'STriggerCutsceneBookmarkFiredEvent',
-    98: 'STriggerCutsceneEndSceneFiredEvent',
-    99: 'STriggerCutsceneConversationLineEvent',
-    100: 'STriggerCutsceneConversationLineMissingEvent',
-    101: 'SGameUserLeaveEvent',
-    102: 'SGameUserJoinEvent',
-    103: 'SCommandManagerStateEvent',
-    104: 'SCommandManagerTargetPointEvent',
-    105: 'SCommandManagerTargetUnitEvent',
-    106: 'STriggerAnimLengthQueryByNameEvent',
-    107: 'STriggerAnimLengthQueryByPropsEvent',
-    108: 'STriggerAnimOffsetEvent',
-    109: 'SCatalogModifyEvent',
-    110: 'SHeroTalentSelectedEvent'
-}
+@EventProcessor(103)
+def SCommandManagerStateEvent_processor(player, event):
+    player.SCommandManagerStateEvents.append(
+        SCommandManagerStateEvent(event))
+
+SUnitDiedEvent_id = 2
 
 def get_players(player_data):
     players = {}
@@ -183,12 +95,13 @@ def get_players(player_data):
         p.control = d['m_control']
         p.race = d['m_race'] # ' ', meaningless - there is no race
         p.handicap = d['m_handicap'] # always 100, no handicaps
+        
         t = d['m_toon']
         p.id = t['m_id']
         p.region = t['m_region']
         p.realm = t['m_realm']
-        p.result = d['m_result'] # 1 = WIN, 2 = LOSS?
-        p.win = (p.result == 1)
+        
+        p.win = (d['m_result'] == 1) # 1 = WIN, 2 = LOSS
         p.slot = d['m_workingSetSlotId'] # Game slots 0-9
         p.hero = d['m_hero']
         p.name = d['m_name']
@@ -298,8 +211,7 @@ class HeroAnalysis:
                 uid = m['_userid']['m_userId']
                 p = self.player_slots[uid]
                 loop = m['_gameloop']
-                point = m['m_point']
-                point = Point(point['x'], point['y'])
+                point = Point(m['m_point'])
                 p.pings.append(TimePlace(loop, point))
 
             elif event == 'NNet.Game.SChatMessage':
@@ -330,11 +242,13 @@ tracker_event_types = {
         for t in trackers:
             if t['_eventid'] == SUnitDiedEvent_id:
                 d = SUnitDiedEvent()
-                d.loop = t['_gameloop']
+                d.timeplace = TimePlace(
+                    t['_gameloop'],
+                    Point(t['m_x'], t['m_y'])
+                )
                 d.killer_player_id = t['m_killerPlayerId']
                 d.killerUnitTagIndex = t['m_killerUnitTagIndex']
                 d.unitTagIndex = t['m_unitTagIndex']
-                d.point = Point(t['m_x'], t['m_y'])
                 self.deaths.append(d)
 
         game_events = parser.get_game_events()
@@ -378,8 +292,6 @@ tracker_event_types = {
             '\n'.join(str(p) for p in team1),
             'Win' if team2[0].win else 'Loss',
             '\n'.join(str(p) for p in team2),
-            # '\n'.join(str(c) for c in self.chats),
-            # '\n'.join(str(p) for p in self.pings),
             # '\n'.join(str(d) for d in self.deaths),
             'Omitted',
             '\n'.join(

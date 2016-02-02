@@ -1,3 +1,5 @@
+from HeroBasicTypes import TimePlace
+
 class SUnitDiedEvent:
     def __repr__(self):
         return '{:6} {} - {} > {}'.format(

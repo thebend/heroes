@@ -27,10 +27,13 @@ Pings (STriggerPingEvents):
 Chats (STriggerChatMessageEvents):
 {}
 
-SCmdEvents: Omitted
-SHeroTalentSelectedEvents: Omitted
-SCommandManagerTargetPointEvents: Omitted
-SCameraUpdateEvents: Omitted
+SCmdEvents: {}
+SHeroTalentSelectedEvents: {}
+SCommandManagerTargetPointEvents: {}
+SCameraUpdateEvents: {}
+SUnitClickEvents: {}
+SCommandManagerTargetUnitEvents: {}
+SCommandManagerStateEvents: {}
 '''.format(
     self.slot,
     self.name,
@@ -41,8 +44,18 @@ SCameraUpdateEvents: Omitted
     self.mount,
     Player.lf(self.STriggerPingEvents),
     Player.lf(self.chats),
+    len(self.SCmdEvents),
     # Player.lf(self.SCmdEvents),
+    len(self.SHeroTalentSelectedEvents),
     # Player.lf(self.SHeroTalentSelectedEvents),
+    len(self.SCommandManagerTargetPointEvents),
     # Player.lf(self.SCommandManagerTargetPointEvents),
+    len(self.SCameraUpdateEvents),
     # Player.lf(self.SCameraUpdateEvents),
+    len(self.SUnitClickEvents),
+    # Player.lf(self.SUnitClickEvents),
+    len(self.SCommandManagerTargetUnitEvents),
+    # Player.lf(self.SCommandManagerTargetUnitEvents),
+    len(self.SCommandManagerStateEvents)
+    # Player.lf(self.SCommandManagerStateEvents)
 )
