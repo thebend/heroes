@@ -1,20 +1,20 @@
-class TimePlace:
-    @staticmethod
-    def from_json(json, point_key):
-        loop = json['_gameloop']
-        t = json[point_key]
-        point = None if t == None else Point(t)
-        return TimePlace(loop, point)
+from collections import namedtuple
 
-    def __init__(self, loop, location):
-        self.loop = loop
-        self.location = location
+Color = namedtuple('Color','r g b a')
+Color.__repr__ = lambda self: '({},{},{},{})'.format(
+    self.r, self.g, self.b, self.a
+)
 
-    def __repr__(self):
-        return '{:>6} {}'.format(
-            '@{}'.format(self.loop),
-            self.location
-        )
+TimePlace = namedtuple('TimePlace', 'loop point')
+TimePlace.__repr__ = lambda self: '{:>6} {}'.format(
+    '@{}'.format(self.loop),
+    self.point
+)
+def json_timeplace(json, point_key):
+    loop = json['_gameloop']
+    t = json[point_key]
+    point = None if t == None else Point(t)
+    return TimePlace(loop, point)
 
 class Point:
     def __init__(self, x, y = None, z = None):
@@ -30,36 +30,5 @@ class Point:
             self.z = z
 
     def __repr__(self):
-        if self.z == None:
-            return '({:6}, {:6})'.format(
-                self.x,
-                self.y
-            )
-        else:
-            return '({:6}, {:6}, {:6})'.format(
-                self.x,
-                self.y,
-                self.z
-            )
-
-class Chat:
-    def __repr__(self):
-        return '{:6}: {}'.format(
-            '@{}'.format(self.loop),
-            self.message
-        )
-
-class Color:
-    def __init__(self, r, g, b, a):
-        self.r = r
-        self.g = g
-        self.b = b
-        self.a = a
-
-    def __repr__(self):
-        return '({},{},{},{})'.format(
-            self.r,
-            self.g,
-            self.b,
-            self.a
-        )
+        if self.z == None: return '({:6}, {:6})'.format(self.x, self.y)
+        return '({:6}, {:6}, {:6})'.format(self.x, self.y, self.z)

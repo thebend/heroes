@@ -1,7 +1,22 @@
+# Return a function that does nothing by default
+def default_processor(player, event):
+    pass
+
+event_processors = {}
+def get_event_processor(id):
+    try: return event_processors[id]
+    except KeyError: return default_processor
+
+def EventProcessor(id):
+    def set_processor(processor):
+        event_processors[id] = processor
+        return processor
+    return set_processor
+
 # These do vary slightly between protocol versions
 # eg. 110 is SHeroTalentTreeSelectedEvent
 # and 110 is HeroTalentSelectedEvent
-game_event_ids = {
+event_ids = {
     5: 'SUserFinishedLoadingSyncEvent',
     7: 'SUserOptionsEvent',
     9: 'SBankFileEvent',

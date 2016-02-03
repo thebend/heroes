@@ -3,82 +3,8 @@ from Player import Player
 from HeroBasicTypes import *
 from collections import defaultdict
 
-from game_event_ids import game_event_ids
-
-from events.SCmdEvent import SCmdEvent
-from events.SHeroTalentSelectedEvent import SHeroTalentSelectedEvent
-from events.SUnitDiedEvent import SUnitDiedEvent
-from events.STriggerPingEvent import STriggerPingEvent
-from events.SUnitDiedEvent import SUnitDiedEvent
-from events.SUnitClickEvent import SUnitClickEvent
-from events.SCommandManagerTargetUnitEvent import SCommandManagerTargetUnitEvent
-from events.SCommandManagerStateEvent import SCommandManagerStateEvent
-
-# Move these into module __init__ or something?
-# Where to keep this?
-event_processors = {}
-def get_event_processor(id):
-    try: return event_processors[id]
-    except KeyError: return default_processor
-
-def EventProcessor(id):
-    def set_processor(processor):
-        event_processors[id] = processor
-        return processor
-    return set_processor
-
-# Return a function that does nothing when no hit found
-def default_processor(player, event):
-    pass
-
-@EventProcessor(27)
-def SCmdEvent_processor(player, event):
-    player.SCmdEvents.append(
-        SCmdEvent(event)
-    )
-
-@EventProcessor(110)
-def SHeryoTalentSelectedEvent_processor(player, event):
-    player.SHeroTalentSelectedEvents.append(
-        SHeroTalentSelectedEvent(event)
-    )
-
-@EventProcessor(104)
-def SCommandManagerTargetPointEvent_processor(player, event):
-    player.SCommandManagerTargetPointEvents.append(
-        TimePlace.from_json(event, 'm_target'))
-
-@EventProcessor(49)
-def SCameraUpdateEvent_processor(player, event):
-    player.SCameraUpdateEvents.append(
-        TimePlace.from_json(event, 'm_target'))
-
-@EventProcessor(36)
-def STriggerPingEvent_processor(player, event):
-    player.STriggerPingEvents.append(
-        STriggerPingEvent(event))
-
-@EventProcessor(32)
-def STriggerChatMessageEvent_processor(player, event):
-    c = Chat()
-    c.loop = event['_gameloop']
-    c.message = event['m_chatMessage']
-    player.chats.append(c)
-
-@EventProcessor(39)
-def SUnitClickEvent_processor(player, event):
-    player.SUnitClickEvents.append(
-        SUnitClickEvent(event))
-
-@EventProcessor(105)
-def SCommandManagerTargetUnitEvent_processor(player, event):
-    player.SCommandManagerTargetUnitEvents.append(
-        SCommandManagerTargetUnitEvent(event))
-
-@EventProcessor(103)
-def SCommandManagerStateEvent_processor(player, event):
-    player.SCommandManagerStateEvents.append(
-        SCommandManagerStateEvent(event))
+from events import *
+from events.EventProcessor import get_event_processor, event_ids
 
 SUnitDiedEvent_id = 2
 
@@ -179,7 +105,7 @@ class HeroAnalysis:
             if pid is None: continue
             # Shouldn't need this line
             # Just making sure assumption is correct across replays
-            if pid <> s['m_workingSetSlotId']:
+            if pid != s['m_workingSetSlotId']:
                 raise Exception('UserID and WorkingSetSlotID should match')
             p = self.player_slots[pid]
 
@@ -202,27 +128,6 @@ class HeroAnalysis:
         self.lock_teams = go['m_lockTeams'] # ???
         self.m_amm = go['m_amm'] # ???
 
-        # Messages are covered in more detail in game_events
-        """
-        messages = parser.get_messages()
-        for m in messages:
-            event = m['_event']
-            if event == 'NNet.Game.SPingMessage':
-                uid = m['_userid']['m_userId']
-                p = self.player_slots[uid]
-                loop = m['_gameloop']
-                point = Point(m['m_point'])
-                p.pings.append(TimePlace(loop, point))
-
-            elif event == 'NNet.Game.SChatMessage':
-                uid = m['_userid']['m_userId']
-                p = self.player_slots[uid]
-                c = Chat()
-                c.loop = m['_gameloop']
-                c.string = m['m_string']
-                p.chats.append(c)
-        """
-        
         trackers = parser.get_trackers()
         """
 tracker_event_types = {
@@ -238,18 +143,8 @@ tracker_event_types = {
     9: (192, 'NNet.Replay.Tracker.SPlayerSetupEvent'),
 }
         """
-        self.deaths = []
-        for t in trackers:
-            if t['_eventid'] == SUnitDiedEvent_id:
-                d = SUnitDiedEvent()
-                d.timeplace = TimePlace(
-                    t['_gameloop'],
-                    Point(t['m_x'], t['m_y'])
-                )
-                d.killer_player_id = t['m_killerPlayerId']
-                d.killerUnitTagIndex = t['m_killerUnitTagIndex']
-                d.unitTagIndex = t['m_unitTagIndex']
-                self.deaths.append(d)
+        # Use decorator for tracker handlers just like event handlers
+        self.deaths = [SUnitDiedEvent.get(t) for t in trackers if t['_eventid'] == SUnitDiedEvent_id]
 
         game_events = parser.get_game_events()
         self.event_counts = defaultdict(int)
@@ -273,7 +168,32 @@ tracker_event_types = {
         team1 = [p for p in self.players.itervalues() if p.team == 0]
         team2 = [p for p in self.players.itervalues() if p.team == 1]
 
-        return open('AnalysisTemplate.txt','r').read().format(
+        return \
+'''Replay Path: {}
+Version: {}
+Duration in Loops: {}
+Map: {}
+Time: {}
+Mini-Save: {}
+Max Users: {}
+Single Player: {}
+Blizzard Map: {}
+Competitive: {}
+Practice: {}
+Ranked: {}
+Lock Teams: {}
+m_amm: {}
+
+Team 1 ({}):
+{}
+
+Team 2 ({}):
+{}
+
+Deaths: {}
+
+Event Counts:
+{}'''.format(
             self.replay,
             self.version,
             self.duration_loops,
@@ -293,9 +213,9 @@ tracker_event_types = {
             'Win' if team2[0].win else 'Loss',
             '\n'.join(str(p) for p in team2),
             # '\n'.join(str(d) for d in self.deaths),
-            'Omitted',
+            len(self.deaths),
             '\n'.join(
-                '{:3} ({:40}): {}'.format(k, game_event_ids[k], v)
+                '{:3} ({:40}): {}'.format(k, event_ids[k], v)
                 for k, v in self.event_counts.iteritems()
             )
         )

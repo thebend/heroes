@@ -1,12 +1,7 @@
-from HeroBasicTypes import TimePlace
+from HeroBasicTypes import json_timeplace
+from EventProcessor import EventProcessor
 
 class STriggerPingEvent():
-    def __init__(self, event):
-        self.timeplace = TimePlace.from_json(event, 'm_point')
-        self.minimap = event['m_pingedMinimap']
-        self.option = event['m_option']
-        self.unit = event['m_unit']
-
     def __repr__(self):
         return '{} {} {:2} U{}'.format(
             self.timeplace,
@@ -14,3 +9,12 @@ class STriggerPingEvent():
             self.option,
             self.unit
         )
+
+@EventProcessor(36)
+def STriggerPingEvent_processor(player, event):
+    p = STriggerPingEvent()
+    p.timeplace = json_timeplace(event, 'm_point')
+    p.minimap = event['m_pingedMinimap']
+    p.option = event['m_option']
+    p.unit = event['m_unit']
+    player.STriggerPingEvents.append(p)
