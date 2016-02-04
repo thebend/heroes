@@ -6,7 +6,10 @@ __all__ = [
     'SHeroTalentSelectedEvent',
     'STriggerPingEvent',
     'SUnitClickEvent',
-    'SUnitDiedEvent',
     'BasicEvents',
-    'STriggerChatMessageEvent'
+    'STriggerChatMessageEvent',
+    'SUserOptionsEvent',
+    'STriggerSoundOffsetEvent',
+    'SGameUserLeaveEvent',
+    'SGameUserJoinEvent'
 ]

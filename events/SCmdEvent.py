@@ -32,7 +32,7 @@ def SCmdEvent_processor(player, event):
     except TypeError: ce.ability = None
     
     # always a single-item dict
-    k, v = event['m_data'].items()[0]
+    k, v = next(event['m_data'].iteritems())
     if k == 'TargetPoint':
         ce.target_point = Point(v)
     elif k == 'TargetUnit':
@@ -45,5 +45,5 @@ def SCmdEvent_processor(player, event):
 
     ce.other_unit = event['m_otherUnit']
     ce.sequence = event['m_sequence'] # almost all unique
-    
+
     player.SCmdEvents.append(ce)

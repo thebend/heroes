@@ -14,100 +14,99 @@ def EventProcessor(id):
     return set_processor
 
 # These do vary slightly between protocol versions
-# eg. 110 is SHeroTalentTreeSelectedEvent
-# and 110 is HeroTalentSelectedEvent
+# eg. 110 is SHeroTalentTreeSelectedEvent and HeroTalentSelectedEvent
 event_ids = {
-    5: 'SUserFinishedLoadingSyncEvent',
-    7: 'SUserOptionsEvent',
-    9: 'SBankFileEvent',
-    10: 'SBankSectionEvent',
-    11: 'SBankKeyEvent',
-    12: 'SBankValueEvent',
-    13: 'SBankSignatureEvent',
-    14: 'SCameraSaveEvent',
-    21: 'SSaveGameEvent',
-    22: 'SSaveGameDoneEvent',
-    23: 'SLoadGameDoneEvent',
+    5: 'SUserFinishedLoadingSyncEvent', # unused
+    7: 'SUserOptionsEvent', # patched/camera follow/mac
+    9: 'SBankFileEvent', # unused
+    10: 'SBankSectionEvent', # unused
+    11: 'SBankKeyEvent', # unused
+    12: 'SBankValueEvent', # unused
+    13: 'SBankSignatureEvent', # unused
+    14: 'SCameraSaveEvent', # unused
+    21: 'SSaveGameEvent', # unused
+    22: 'SSaveGameDoneEvent', # unused
+    23: 'SLoadGameDoneEvent', # unused
     25: 'SCommandManagerResetEvent',
-    26: 'SGameCheatEvent',
+    26: 'SGameCheatEvent', # unused
     27: 'SCmdEvent',
-    28: 'SSelectionDeltaEvent',
-    29: 'SControlGroupUpdateEvent',
-    30: 'SSelectionSyncCheckEvent',
-    31: 'SResourceTradeEvent',
+    28: 'SSelectionDeltaEvent', # unused
+    29: 'SControlGroupUpdateEvent', # unused
+    30: 'SSelectionSyncCheckEvent', # unused
+    31: 'SResourceTradeEvent', # unused
     32: 'STriggerChatMessageEvent',
-    33: 'SAICommunicateEvent',
-    34: 'SSetAbsoluteGameSpeedEvent',
-    35: 'SAddAbsoluteGameSpeedEvent',
+    33: 'SAICommunicateEvent', # unused
+    34: 'SSetAbsoluteGameSpeedEvent', # unused
+    35: 'SAddAbsoluteGameSpeedEvent', # unused
     36: 'STriggerPingEvent',
-    37: 'SBroadcastCheatEvent',
-    38: 'SAllianceEvent',
+    37: 'SBroadcastCheatEvent', # unused
+    38: 'SAllianceEvent', # unused
     39: 'SUnitClickEvent',
-    40: 'SUnitHighlightEvent',
-    41: 'STriggerReplySelectedEvent',
-    43: 'SHijackReplayGameEvent',
-    44: 'STriggerSkippedEvent',
-    45: 'STriggerSoundLengthQueryEvent',
-    46: 'STriggerSoundOffsetEvent',
+    40: 'SUnitHighlightEvent', # unused
+    41: 'STriggerReplySelectedEvent', # unused
+    43: 'SHijackReplayGameEvent', # unused
+    44: 'STriggerSkippedEvent', # unused
+    45: 'STriggerSoundLengthQueryEvent', # unused
+    46: 'STriggerSoundOffsetEvent', # loop/sound
     47: 'STriggerTransmissionOffsetEvent',
     48: 'STriggerTransmissionCompleteEvent',
     49: 'SCameraUpdateEvent',
-    50: 'STriggerAbortMissionEvent',
-    51: 'STriggerPurchaseMadeEvent',
-    52: 'STriggerPurchaseExitEvent',
-    53: 'STriggerPlanetMissionLaunchedEvent',
-    54: 'STriggerPlanetPanelCanceledEvent',
+    50: 'STriggerAbortMissionEvent', # unused
+    51: 'STriggerPurchaseMadeEvent', # unused
+    52: 'STriggerPurchaseExitEvent', # unused
+    53: 'STriggerPlanetMissionLaunchedEvent', # unused
+    54: 'STriggerPlanetPanelCanceledEvent', # unused
     55: 'STriggerDialogControlEvent',
-    56: 'STriggerSoundLengthSyncEvent',
-    57: 'STriggerConversationSkippedEvent',
-    58: 'STriggerMouseClickedEvent',
-    59: 'STriggerMouseMovedEvent',
-    60: 'SAchievementAwardedEvent',
-    62: 'STriggerTargetModeUpdateEvent',
-    63: 'STriggerPlanetPanelReplayEvent',
+    56: 'STriggerSoundLengthSyncEvent', # unused
+    57: 'STriggerConversationSkippedEvent', # unused
+    58: 'STriggerMouseClickedEvent', # unused
+    59: 'STriggerMouseMovedEvent', # unused
+    60: 'SAchievementAwardedEvent', # unused
+    62: 'STriggerTargetModeUpdateEvent', # unused
+    63: 'STriggerPlanetPanelReplayEvent', # unused
     64: 'STriggerSoundtrackDoneEvent',
-    65: 'STriggerPlanetMissionSelectedEvent',
+    65: 'STriggerPlanetMissionSelectedEvent', # unused
     66: 'STriggerKeyPressedEvent',
-    67: 'STriggerMovieFunctionEvent',
-    68: 'STriggerPlanetPanelBirthCompleteEvent',
-    69: 'STriggerPlanetPanelDeathCompleteEvent',
-    70: 'SResourceRequestEvent',
-    71: 'SResourceRequestFulfillEvent',
-    72: 'SResourceRequestCancelEvent',
-    73: 'STriggerResearchPanelExitEvent',
-    74: 'STriggerResearchPanelPurchaseEvent',
-    75: 'STriggerResearchPanelSelectionChangedEvent',
-    77: 'STriggerMercenaryPanelExitEvent',
-    78: 'STriggerMercenaryPanelPurchaseEvent',
-    79: 'STriggerMercenaryPanelSelectionChangedEvent',
-    80: 'STriggerVictoryPanelExitEvent',
-    81: 'STriggerBattleReportPanelExitEvent',
-    82: 'STriggerBattleReportPanelPlayMissionEvent',
-    83: 'STriggerBattleReportPanelPlaySceneEvent',
-    84: 'STriggerBattleReportPanelSelectionChangedEvent',
-    85: 'STriggerVictoryPanelPlayMissionAgainEvent',
-    86: 'STriggerMovieStartedEvent',
-    87: 'STriggerMovieFinishedEvent',
-    88: 'SDecrementGameTimeRemainingEvent',
-    89: 'STriggerPortraitLoadedEvent',
-    90: 'STriggerCustomDialogDismissedEvent',
-    91: 'STriggerGameMenuItemSelectedEvent',
-    93: 'STriggerPurchasePanelSelectedPurchaseItemChangedEvent',
-    94: 'STriggerPurchasePanelSelectedPurchaseCategoryChangedEvent',
-    95: 'STriggerButtonPressedEvent',
-    96: 'STriggerGameCreditsFinishedEvent',
-    97: 'STriggerCutsceneBookmarkFiredEvent',
+    67: 'STriggerMovieFunctionEvent', # unused
+    68: 'STriggerPlanetPanelBirthCompleteEvent', # unused
+    69: 'STriggerPlanetPanelDeathCompleteEvent', # unused
+    70: 'SResourceRequestEvent', # unused
+    71: 'SResourceRequestFulfillEvent', # unused
+    72: 'SResourceRequestCancelEvent', # unused
+    73: 'STriggerResearchPanelExitEvent', # unused
+    74: 'STriggerResearchPanelPurchaseEvent', # unused
+    75: 'STriggerResearchPanelSelectionChangedEvent', # unused
+    77: 'STriggerMercenaryPanelExitEvent', # unused
+    78: 'STriggerMercenaryPanelPurchaseEvent', # unused
+    79: 'STriggerMercenaryPanelSelectionChangedEvent', # unused
+    80: 'STriggerVictoryPanelExitEvent', # unused
+    81: 'STriggerBattleReportPanelExitEvent', # unused
+    82: 'STriggerBattleReportPanelPlayMissionEvent', # unused
+    83: 'STriggerBattleReportPanelPlaySceneEvent', # unused
+    84: 'STriggerBattleReportPanelSelectionChangedEvent', # unused
+    85: 'STriggerVictoryPanelPlayMissionAgainEvent', # unused
+    86: 'STriggerMovieStartedEvent', # unused
+    87: 'STriggerMovieFinishedEvent', # unused
+    88: 'SDecrementGameTimeRemainingEvent', # unused
+    89: 'STriggerPortraitLoadedEvent', # unused
+    90: 'STriggerCustomDialogDismissedEvent', # unused
+    91: 'STriggerGameMenuItemSelectedEvent', # unused
+    93: 'STriggerPurchasePanelSelectedPurchaseItemChangedEvent', # unused
+    94: 'STriggerPurchasePanelSelectedPurchaseCategoryChangedEvent', # unused
+    95: 'STriggerButtonPressedEvent', # unused
+    96: 'STriggerGameCreditsFinishedEvent', # unused
+    97: 'STriggerCutsceneBookmarkFiredEvent', # unused
     98: 'STriggerCutsceneEndSceneFiredEvent',
-    99: 'STriggerCutsceneConversationLineEvent',
-    100: 'STriggerCutsceneConversationLineMissingEvent',
+    99: 'STriggerCutsceneConversationLineEvent', # unused
+    100: 'STriggerCutsceneConversationLineMissingEvent', # unused
     101: 'SGameUserLeaveEvent',
     102: 'SGameUserJoinEvent',
     103: 'SCommandManagerStateEvent',
     104: 'SCommandManagerTargetPointEvent',
     105: 'SCommandManagerTargetUnitEvent',
-    106: 'STriggerAnimLengthQueryByNameEvent',
-    107: 'STriggerAnimLengthQueryByPropsEvent',
-    108: 'STriggerAnimOffsetEvent',
-    109: 'SCatalogModifyEvent',
+    106: 'STriggerAnimLengthQueryByNameEvent', # unused
+    107: 'STriggerAnimLengthQueryByPropsEvent', # unused
+    108: 'STriggerAnimOffsetEvent', # unused
+    109: 'SCatalogModifyEvent', # unused
     110: 'SHeroTalentSelectedEvent'
 }

@@ -1,15 +1,15 @@
 from EventProcessor import EventProcessor
+from collections import namedtuple
 
-class Chat:
-    def __repr__(self):
-        return '{:6}: {}'.format(
-            '@{}'.format(self.loop),
-            self.message
-        )
+Chat = namedtuple('Chat', 'loop message')
+Chat.__repr__ = lambda self: '{:6}: {}'.format(
+    '@{}'.format(self.loop),
+    self.message
+)
 
 @EventProcessor(32)
 def STriggerChatMessageEvent_processor(player, event):
-    c = Chat()
-    c.loop = event['_gameloop']
-    c.message = event['m_chatMessage']
-    player.chats.append(c)
+    player.chats.append(Chat(
+        loop = event['_gameloop'],
+        message = event['m_chatMessage']
+    ))

@@ -1,12 +1,12 @@
 from EventProcessor import EventProcessor
+from collections import namedtuple
 
-class SHeroTalentSelectedEvent:
-    def __repr__(self):
-        return '@{0.loop} {0.index}'.format(self)
+SHeroTalentSelectedEvent = namedtuple('SHeroTalentSelectedEvent', 'loop index')
+SHeroTalentSelectedEvent.__repr__ = lambda self: '@{0.loop} {0.index}'.format(self)
 
 @EventProcessor(110)
-def SHeryoTalentSelectedEvent_processor(player, event):
-    hts = SHeroTalentSelectedEvent()
-    hts.loop = event['_gameloop']
-    hts.index = event['m_index']
-    player.SHeroTalentSelectedEvents.append(hts)
+def SHeroTalentSelectedEvent_processor(player, event):
+    player.SHeroTalentSelectedEvents.append(SHeroTalentSelectedEvent(
+        loop = event['_gameloop'],
+        index = event['m_index']
+    ))
