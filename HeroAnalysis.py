@@ -40,11 +40,22 @@ class HeroAnalysis:
         self.player_slots = {}
         self.deaths = []
 
+def get_player_scopes(scopes):
+    player_scopes = defaultdict(dict)
+    for player, settings in scopes.iteritems():
+        for k, v in settings.iteritems():
+            player_scopes[player][k] = v[0]['value']
+    return player_scopes
+
 def analyze(replay):
     a = HeroAnalysis(replay)
     parser = HeroParser.HeroParser(replay)
     a.parser = parser
 
+    # this doesn't seem to do anything useful
+    # attributes = parser.get_attributes()
+    # scopes = get_player_scopes(attributes['scopes'])
+    
     ph = parser.get_protocol_header()
     a.version = ph['m_version']['m_build']
     a.duration_loops = ph['m_elapsedGameLoops']
