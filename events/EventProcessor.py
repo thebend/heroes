@@ -2,14 +2,14 @@
 def default_processor(player, event):
     pass
 
-event_processors = {}
-def get_event_processor(id):
-    try: return event_processors[id]
+processors = {}
+def get(id):
+    try: return processors[id]
     except KeyError: return default_processor
 
 def EventProcessor(id):
     def set_processor(processor):
-        event_processors[id] = processor
+        processors[id] = processor
         return processor
     return set_processor
 
