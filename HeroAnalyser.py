@@ -1,10 +1,10 @@
 import HeroParser
 from Player import Player
-from HeroBasicTypes import *
+from HeroBasicTypes import Color
 from collections import defaultdict
 
-from events import *
-from trackers import *
+from events import EventProcessor
+from trackers import TrackerProcessor
 
 def get_players(player_data):
     players = {}

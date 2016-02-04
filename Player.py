@@ -5,14 +5,10 @@ class Player:
         self.SCommandManagerStateEvents = []
         self.SCommandManagerTargetPointEvents = []
         self.SCommandManagerTargetUnitEvents = []
-        self.chats = []
-        
-        # same as actual chats?
-        self.STriggerChatMessageEvents = []
-        self.STriggerPingEvents = []
-        
         self.SUnitClickEvents = []
         self.SCameraUpdateEvents = []
+        self.chats = []
+        self.pings = []
 
     @staticmethod
     def lf(data):

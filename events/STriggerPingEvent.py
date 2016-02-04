@@ -17,4 +17,4 @@ def STriggerPingEvent_processor(player, event):
     p.minimap = event['m_pingedMinimap']
     p.option = event['m_option']
     p.unit = event['m_unit']
-    player.STriggerPingEvents.append(p)
+    player.pings.append(p)
