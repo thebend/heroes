@@ -2,10 +2,8 @@ from EventProcessor import EventProcessor
 
 class SCommandManagerStateEvent:
     def __repr__(self):
-        return '{:>6} {} {:4}'.format(
-            '@{}'.format(self.loop),
-            self.state,
-            self.sequence
+        return '{0:>6} {1.state} {1.sequence:4}'.format(
+            '@{}'.format(self.loop), self
         )
 
 @EventProcessor(103)

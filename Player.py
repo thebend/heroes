@@ -1,3 +1,6 @@
+def lf(data):
+    return '\n'.join(str(i) for i in data)
+
 class Player:
     def __init__(self):
         self.SCmdEvents = []
@@ -10,48 +13,38 @@ class Player:
         self.chats = []
         self.pings = []
 
-    @staticmethod
-    def lf(data):
-        return '\n'.join(str(i) for i in data)
-
     def __repr__(self):
         return \
-'''{} - {:10} ({:8}) | {}.{}.{} on {}
+'''{0.slot} - {0.name:10} ({0.id:8}) | {0.hero}.{0.hero2}.{0.skin} on {0.mount}
 Pings (STriggerPingEvents):
-{}
+{1}
 
 Chats (STriggerChatMessageEvents):
-{}
+{2}
 
-SCmdEvents: {}
-SHeroTalentSelectedEvents: {}
-SCommandManagerTargetPointEvents: {}
-SCameraUpdateEvents: {}
-SUnitClickEvents: {}
-SCommandManagerTargetUnitEvents: {}
-SCommandManagerStateEvents: {}
+SCmdEvents: {3}
+SHeroTalentSelectedEvents: {4}
+SCommandManagerTargetPointEvents: {5}
+SCameraUpdateEvents: {6}
+SUnitClickEvents: {7}
+SCommandManagerTargetUnitEvents: {8}
+SCommandManagerStateEvents: {9}
 '''.format(
-    self.slot,
-    self.name,
-    self.id,
-    self.hero,
-    self.hero2,
-    self.skin,
-    self.mount,
-    Player.lf(self.STriggerPingEvents),
-    Player.lf(self.chats),
+    self,
+    lf(self.pings),
+    lf(self.chats),
     len(self.SCmdEvents),
-    # Player.lf(self.SCmdEvents),
+    # lf(self.SCmdEvents),
     len(self.SHeroTalentSelectedEvents),
-    # Player.lf(self.SHeroTalentSelectedEvents),
+    # lf(self.SHeroTalentSelectedEvents),
     len(self.SCommandManagerTargetPointEvents),
-    # Player.lf(self.SCommandManagerTargetPointEvents),
+    # lf(self.SCommandManagerTargetPointEvents),
     len(self.SCameraUpdateEvents),
-    # Player.lf(self.SCameraUpdateEvents),
+    # lf(self.SCameraUpdateEvents),
     len(self.SUnitClickEvents),
-    # Player.lf(self.SUnitClickEvents),
+    # lf(self.SUnitClickEvents),
     len(self.SCommandManagerTargetUnitEvents),
-    # Player.lf(self.SCommandManagerTargetUnitEvents),
+    # lf(self.SCommandManagerTargetUnitEvents),
     len(self.SCommandManagerStateEvents)
-    # Player.lf(self.SCommandManagerStateEvents)
+    # lf(self.SCommandManagerStateEvents)
 )

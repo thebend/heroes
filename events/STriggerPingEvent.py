@@ -3,12 +3,8 @@ from EventProcessor import EventProcessor
 
 class STriggerPingEvent():
     def __repr__(self):
-        return '{} {} {:2} U{}'.format(
-            self.timeplace,
-            'Minimap' if self.minimap else 'Gamemap',
-            self.option,
-            self.unit
-        )
+        maptype = 'Minimap' if self.minimap else 'Gamemap'
+        return '{0.timeplace} {1} {0.option:2} U{0.unit}'.format(self, maptype)
 
 @EventProcessor(36)
 def STriggerPingEvent_processor(player, event):

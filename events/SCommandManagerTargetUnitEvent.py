@@ -3,13 +3,8 @@ from EventProcessor import EventProcessor
 
 class SCommandManagerTargetUnitEvent:
     def __repr__(self):
-        return '{:>6} {:2} {} {:3} {:3} {:8}'.format(
-            '@{}'.format(self.loop),
-            self.player_id,
-            self.point,
-            self.target_unit_flags,
-            self.snapshot_unit_link,
-            self.tag
+        return '{0:>6} {1.player_id:2} {1.point} {1.target_unit_flags:3} {1.snapshot_unit_link:3} {1.tag:8}'.format(
+            '@{}'.format(self.loop), self
         )
 
 @EventProcessor(105)

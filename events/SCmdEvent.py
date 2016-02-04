@@ -7,25 +7,13 @@ class Ability:
         self.cmd_index = abil['m_abilCmdIndex']
 
     def __repr__(self):
-        return 'L{}-I{}'.format(
-            self.link,
-            self.cmd_index
-        )
+        return 'L{0.link}-I{0.cmd_index}'.format(self)
 
 class SCmdEvent:
     def __repr__(self):
         return '{:60} | {:20}'.format(
-            '@{:5} {:8} [{:7}] @ {}: {}'.format(
-                self.loop,
-                self.ability,
-                self.cmd_flags,
-                self.target_point,
-                self.other_unit
-            ), 'P{} U{} T{}'.format(
-                self.player_id,
-                self.snapshot_unit_link,
-                self.tag
-            )
+            '@{0.loop:5} {0.ability:8} [{0.cmd_flags:7}] @ {0.target_point}: {0.other_unit}'.format(self),
+            'P{0.player_id} U{0.snapshot_unit_link} T{0.tag}'.format(self)
         )
 
 @EventProcessor(27)
@@ -38,13 +26,10 @@ def SCmdEvent_processor(player, event):
     ce.tag = None
     
     ce.loop = event['_gameloop']
-
-    try:
-        ce.ability = Ability(event['m_abil'])
-    except TypeError:
-        ce.ability = None
-    
     ce.cmd_flags = event['m_cmdFlags']
+    
+    try: ce.ability = Ability(event['m_abil'])
+    except TypeError: ce.ability = None
     
     # always a single-item dict
     k, v = event['m_data'].items()[0]

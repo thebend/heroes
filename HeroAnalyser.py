@@ -3,36 +3,29 @@ from Player import Player
 from HeroBasicTypes import Color
 from collections import defaultdict
 
-from events import EventProcessor
-from trackers import TrackerProcessor
+from events import *
+from trackers import *
 
-def get_players(player_data):
-    players = {}
-    for d in player_data:
-        p = Player()
-        c = d['m_color']
-        # Is there any relevance to red vs blue team?
-        # These colors aren't customizable, just red or blue
-        p.color = Color(c['m_r'], c['m_g'], c['m_b'], c['m_a'])
-        p.team = d['m_teamId']
-        p.observe = d['m_observe']
-        p.control = d['m_control']
-        p.race = d['m_race'] # ' ', meaningless - there is no race
-        p.handicap = d['m_handicap'] # always 100, no handicaps
-        p.win = (d['m_result'] == 1) # 1 = WIN, 2 = LOSS
-        p.slot = d['m_workingSetSlotId'] # Game slots 0-9
-        p.hero = d['m_hero']
-        p.name = d['m_name']
-        
-        t = d['m_toon']
-        p.id = t['m_id']
-        p.region = t['m_region']
-        p.realm = t['m_realm']
-        
-        players[p.id] = p
-
-    player_slots = dict((p.slot, p) for p in players.itervalues())
-    return players, player_slots
+def get_player(d):
+    p = Player()
+    p.team = d['m_teamId']
+    p.observe = d['m_observe']
+    p.control = d['m_control']
+    p.race = d['m_race'] # ' ', meaningless - there is no race
+    p.handicap = d['m_handicap'] # always 100, no handicaps
+    p.win = (d['m_result'] == 1) # 1 = WIN, 2 = LOSS
+    p.slot = d['m_workingSetSlotId'] # Game slots 0-9
+    p.hero = d['m_hero']
+    p.name = d['m_name']
+    
+    c = d['m_color']
+    p.color = Color(c['m_r'], c['m_g'], c['m_b'], c['m_a']) # either red or blue
+    
+    t = d['m_toon']
+    p.id = t['m_id']
+    p.region = t['m_region']
+    p.realm = t['m_realm']
+    return p
 
 def get_player_by_name(players, name):
     for p in players:
@@ -40,6 +33,7 @@ def get_player_by_name(players, name):
             return p
     raise LookupError('Could not find player named "{}"'.format(name))
 
+# Should use SimpleRecord class (Python 3.3+)
 class HeroAnalyser:
     def __init__(self, replay):
         self.replay = replay
@@ -57,7 +51,12 @@ class HeroAnalyser:
         self.mini_save = pd['m_miniSave']
         self.time = pd['m_timeUTC'] # what format is this?  Huge int
 
-        self.players, self.player_slots = get_players(pd['m_playerList'])
+        self.players = {}
+        self.player_slots = {}
+        for data in pd['m_playerList']:
+            p = get_player(data)
+            self.players[p.id] = p
+            self.player_slots[p.slot] = p
 
         pid = parser.get_protocol_init_data()
         sls = pid['m_syncLobbyState']

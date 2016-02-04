@@ -2,7 +2,7 @@ from EventProcessor import EventProcessor
 
 class SHeroTalentSelectedEvent:
     def __repr__(self):
-        return '@{} {}'.format(self.loop, self.index)
+        return '@{0.loop} {0.index}'.format(self)
 
 @EventProcessor(110)
 def SHeryoTalentSelectedEvent_processor(player, event):

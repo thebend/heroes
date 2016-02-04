@@ -1,69 +1,59 @@
 from events import EventProcessor
 from trackers import TrackerProcessor
 
-def analysis_string(a):
-    team1 = [p for p in a.players.itervalues() if p.team == 0]
-    team2 = [p for p in a.players.itervalues() if p.team == 1]
+def lf(data):
+    return '\n'.join(str(i) for i in data)
+
+def analysis_string(analysis):
+    team1 = [p for p in analysis.players.itervalues() if p.team == 0]
+    team2 = [p for p in analysis.players.itervalues() if p.team == 1]
 
     return \
-'''Replay Path: {}
-Version: {}
-Duration in Loops: {}
-Map: {}
-Time: {}
-Mini-Save: {}
-Max Users: {}
-Single Player: {}
-Blizzard Map: {}
-Competitive: {}
-Practice: {}
-Ranked: {}
-Lock Teams: {}
-m_amm: {}
+'''Replay Path: {0.replay}
+Version: {0.version}
+Duration in Loops: {0.duration_loops}
+Map: {0.map}
+Time: {0.time}
+Mini-Save: {0.mini_save}
+Max Users: {0.max_users}
+Single Player: {0.single_player}
+Blizzard Map: {0.blizzard_map}
+Competitive: {0.competitive}
+Practice: {0.practice}
+Ranked: {0.ranked}
+Lock Teams: {0.lock_teams}
+m_amm: {0.m_amm}
 
-Team 1 ({}):
-{}
+Team 1 ({1}):
+{2}
 
-Team 2 ({}):
-{}
+Team 2 ({3}):
+{4}
 
-Deaths: {}
+Deaths: {5}
 
 Event Counts:
-{}
+{6}
 
 Tracker Counts:
-{}'''.format(
-        a.replay,
-        a.version,
-        a.duration_loops,
-        a.map,
-        a.time,
-        a.mini_save,
-        a.max_users,
-        a.single_player,
-        a.blizzard_map,
-        a.competitive,
-        a.practice,
-        a.ranked,
-        a.lock_teams,
-        a.m_amm,
+{7}'''.format(
+        analysis,
         'Win' if team1[0].win else 'Loss',
-        '\n'.join(str(p) for p in team1),
+        lf(team1),
         'Win' if team2[0].win else 'Loss',
-        '\n'.join(str(p) for p in team2),
+        lf(team2),
         # '\n'.join(str(d) for d in a.deaths),
-        len(a.deaths),
-        '\n'.join(
+        len(analysis.deaths),
+        lf(
             '{:3} {:35} {:>5}'.format(k, EventProcessor.event_ids[k], v)
-            for k, v in a.event_counts.iteritems()
+            for k, v in analysis.event_counts.iteritems()
         ),
-        '\n'.join(
+        lf(
             '{:3} {:3} {:31} {:5}'.format(
                 k,
                 TrackerProcessor.tracker_ids[k][0],
                 TrackerProcessor.tracker_ids[k][1],
                 v
-            ) for k, v in a.tracker_counts.iteritems()
+            ) for k, v in analysis.tracker_counts.iteritems()
         )
     )
