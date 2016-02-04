@@ -3,8 +3,7 @@ from collections import namedtuple
 
 SUnitClickEvent = namedtuple('SUnitClickEvent', 'loop unit_tag')
 SUnitClickEvent.__repr__ = lambda self: '{:>6} {}'.format(
-    '@{}'.format(self.loop),
-    self.unit_tag
+    '@{}'.format(self.loop), self.unit_tag
 )
 
 @EventProcessor(39)

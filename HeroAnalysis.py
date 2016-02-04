@@ -28,7 +28,7 @@ def get_player(d):
     return p
 
 def get_player_by_name(players, name):
-    for p in players:
+    for p in players.itervalues():
         if p.name == name:
             return p
     raise LookupError('Could not find player named "{}"'.format(name))
