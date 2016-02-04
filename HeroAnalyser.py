@@ -37,6 +37,9 @@ def get_player_by_name(players, name):
 class HeroAnalyser:
     def __init__(self, replay):
         self.replay = replay
+        self.players = {}
+        self.player_slots = {}
+        self.deaths = []
 
     def analyze(self):
         parser = HeroParser.HeroParser(self.replay)
@@ -51,8 +54,6 @@ class HeroAnalyser:
         self.mini_save = pd['m_miniSave']
         self.time = pd['m_timeUTC'] # what format is this?  Huge int
 
-        self.players = {}
-        self.player_slots = {}
         for data in pd['m_playerList']:
             p = get_player(data)
             self.players[p.id] = p
@@ -94,7 +95,6 @@ class HeroAnalyser:
         # why are these called trackers?  WHich events do I need to care about?
         trackers = parser.get_trackers()
         self.tracker_counts = defaultdict(int)
-        self.deaths = []
         for tracker in trackers:
             event_id = tracker['_eventid']
             self.tracker_counts[event_id] += 1
