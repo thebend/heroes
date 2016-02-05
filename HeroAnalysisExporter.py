@@ -49,7 +49,7 @@ Tracker Counts:
             for k, v in analysis.event_counts.iteritems()
         ),
         lf(
-            '{:3} {:3} {:31} {:5}'.format(
+            '{:3} {:4} {:30} {:5}'.format(
                 k,
                 TrackerProcessor.tracker_ids[k][0],
                 TrackerProcessor.tracker_ids[k][1],

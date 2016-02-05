@@ -6,7 +6,7 @@ SCommandManagerStateEvent = namedtuple(
     'loop state sequence'
 )
 SCommandManagerStateEvent.__repr__ = lambda self: \
-    '{0:>6} {1.state} {1.sequence:4}'.format(
+    '{0:>6} ST-{1.state:<2} SEQ-{1.sequence:4}'.format(
         '@{}'.format(self.loop), self
     )
 

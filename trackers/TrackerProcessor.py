@@ -28,5 +28,9 @@ tracker_ids = {
     6: (184, 'SUnitInitEvent'), # not used
     7: (189, 'SUnitDoneEvent'), # not used
     8: (191, 'SUnitPositionsEvent'),
-    9: (192, 'SPlayerSetupEvent') # confirmed irrelevant
+    9: (192, 'SPlayerSetupEvent'), # confirmed irrelevant
+    
+    # didn't find 10/11 on original test games - only AI game
+    10: (None, None),
+    11: (None, None)
 }

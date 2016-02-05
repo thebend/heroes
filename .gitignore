@@ -1,5 +1,6 @@
 # Blizzard's heroprotocol files
 heroprotocol/
+*.db
 
 *.swp
 

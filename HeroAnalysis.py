@@ -100,11 +100,12 @@ def analyze(replay):
     # Are competitive/practice/ranked mutually exclusive?
     a.competitive = go['m_competitive']
     a.practice = go['m_practice']
-    a.ranked = go['m_ranked']
+    try: a.ranked = go['m_ranked']
+    except KeyError: a.ranked = False
     a.lock_teams = go['m_lockTeams'] # ???
     a.m_amm = go['m_amm'] # ???
 
-    # why are these called trackers?  WHich events do I need to care about?
+    # why are these called trackers?
     trackers = parser.get_trackers()
     a.tracker_counts = defaultdict(int)
     for tracker in trackers:

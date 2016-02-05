@@ -6,13 +6,21 @@ import sqlite3
 import os
 
 cwd = os.getcwd()
-replay_path = r'{}\replays\ben\zag2.StormReplay'.format(cwd)
+replay_path = r'{}\replays\ben\butcher-test.StormReplay'.format(cwd)
 
 analysis = HeroAnalysis.analyze(replay_path)
 ben = HeroAnalysis.get_player_by_name(analysis.players, 'TheBenD')
 
+print HeroAnalysisExporter.analysis_string(analysis)
+
+for e in ben.SCmdEvents:
+    print e
+for e in ben.SCommandManagerStateEvents:
+    print e
+    
 connection = sqlite3.connect(r'{}\database\database.db'.format(cwd))
 cursor = connection.cursor()
+
 records = []
 for e in ben.SCmdEvents:
     a = e.ability
@@ -37,8 +45,10 @@ for e in ben.SCmdEvents:
         e.tag
     ))
 
-for r in records:
-    print r
+# set up database
+cursor.execute('DROP TABLE IF EXISTS cmd_event');
+event_table_qry = open('database/SCmdEvent.sql','r').read()
+cursor.execute(event_table_qry)
 
 blanks = ','.join('?'*14)
 insert_qry = 'INSERT INTO cmd_event VALUES ({})'.format(blanks)
@@ -46,20 +56,3 @@ cursor.executemany(insert_qry, records)
 
 connection.commit()
 connection.close()
-'''
-# abilities = set(str(e.ability) for e in ben.SCmdEvents)
-abilities = defaultdict(int)
-for event in ben.SCmdEvents:
-    print event
-    ability = event.ability
-    abilities[str(ability)] += 1
-    
-# print sorted(abilities)
-for k in sorted(abilities.iterkeys()):
-    print '{:7} {:3}'.format(k, abilities[k])
-
-#for e in ben.SCmdEvents:
-#    abilities.add(e.ability)
-#    print e
-# print HeroAnalysisExporter.analysis_string(analysis)
-'''

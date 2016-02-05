@@ -1,3 +1,5 @@
+from events.SUserOptionsEvent import SUserOptionsEvent
+
 def lf(data):
     return '\n'.join(str(i) for i in data)
 
@@ -10,12 +12,18 @@ class Player:
         self.SCommandManagerTargetUnitEvents = []
         self.SUnitClickEvents = []
         self.SCameraUpdateEvents = []
-        self.SUserOptionsEvents = []
         self.STriggerSoundOffsetEvents = []
         self.chats = []
         self.pings = []
         self.drops = []
         self.joins = []
+        
+        # was pulling this data from slot info,
+        # but for AI might be different
+        self.hero2 = None
+        self.skin = None
+        self.mount = None
+        self.user_options = SUserOptionsEvent(None,None,None)
 
     def __repr__(self):
         return \
